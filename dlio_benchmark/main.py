@@ -17,6 +17,7 @@
 import os
 import math
 import logging
+from socket import socket, gethostname
 from time import time
 import json
 import numpy as np
@@ -449,9 +450,13 @@ class DLIOBenchmark(object):
             # Save collected stats to disk
             self.stats.finalize()
             self.stats.save_data()
+        from mpi4py import MPI
+        print(f"Before barrier on Hostname: {gethostname()}, PID: {os.getpid()}, MPI Size: {MPI.COMM_WORLD.size}, MPI Rank: {MPI.COMM_WORLD.rank}, Timestamp: {utcnow()}")
         self.comm.barrier()
+        print(f"After barrier on Hostname: {gethostname()}, PID: {os.getpid()}, MPI Size: {MPI.COMM_WORLD.size}, MPI Rank: {MPI.COMM_WORLD.rank}, Timestamp: {utcnow()}")
         if dftracer_finalize and dftracer:
             self.args.finalize_dftracer(dftracer)
+        print(f"After finalize on Hostname: {gethostname()}, PID: {os.getpid()}, MPI Size: {MPI.COMM_WORLD.size}, MPI Rank: {MPI.COMM_WORLD.rank}, Timestamp: {utcnow()}")
 
 
 @hydra.main(version_base=None, config_path="configs", config_name="config")
