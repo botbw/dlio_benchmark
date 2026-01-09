@@ -155,7 +155,7 @@ class DLIOMPI:
             # MPI may have already been initialized by dlio_benchmark_test.py
             if not MPI.Is_initialized():
                 MPI.Init()
-            
+            print(f"Init on Hostname: {socket.gethostname()}, PID: {os.getpid()}, MPI Size: {MPI.COMM_WORLD.size}, MPI Rank: {MPI.COMM_WORLD.rank}, Timestamp: {utcnow()}")
             self.mpi_state = MPIState.MPI_INITIALIZED
             split_comm = MPI.COMM_WORLD.Split_type(MPI.COMM_TYPE_SHARED)
             # Number of processes on this node and local rank
@@ -259,6 +259,7 @@ class DLIOMPI:
     def finalize(self):
         from mpi4py import MPI
         if self.mpi_state == MPIState.MPI_INITIALIZED and MPI.Is_initialized():
+            print(f"Finalize on Hostname: {socket.gethostname()}, PID: {os.getpid()}, MPI Size: {MPI.COMM_WORLD.size}, MPI Rank: {MPI.COMM_WORLD.rank}, Timestamp: {utcnow()}")
             MPI.Finalize()
 
 def timeit(func):
